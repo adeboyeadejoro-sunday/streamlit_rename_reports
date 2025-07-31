@@ -1,6 +1,8 @@
 import streamlit as st
 from datetime import datetime
 from io import BytesIO
+import os
+from pathlib import Path
 
 # Constants
 TEST_OPTIONS = [
@@ -29,13 +31,16 @@ if uploaded_file:
     date_input = st.date_input("Select Date")
 
     if sku and selected_tests and date_input:
-        # Step 3: Format the test shorthands
+        
         if len(selected_tests) == 1:
             tests_str = selected_tests[0]
         elif len(selected_tests) == 2:
-            tests_str = "$".join(selected_tests)
+            tests_str = f"{selected_tests[0]}${selected_tests[1]}"
         else:
-            tests_str = selected_tests[0] + "$@" + "$@".join(selected_tests[1:])
+            first = selected_tests[0]
+            second = f"${selected_tests[1]}"
+            rest = "".join([f"$@{test}" for test in selected_tests[2:]])
+            tests_str = first + second + rest
 
         # Step 4: Format the date
         date_str = date_input.strftime("%d.%m.%Y")
